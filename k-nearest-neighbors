@@ -18,7 +18,9 @@ def knn(dict1, point, k):
     }
 
     point = (3,4)
+    
     k = 2
+    
     distance_list = []
     for key in list(dict1.keys()):
         distance_list.append(euclid_dist(point,key))
