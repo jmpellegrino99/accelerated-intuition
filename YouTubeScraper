@@ -1,0 +1,376 @@
+#LIST ENTERER
+def inp():
+    "Enter all queries, followed by STOP."
+    counter = 1
+    queries = []
+    while True:
+        entry = str(input("Query {}/STOP: ".format(counter)))
+        if entry not in ("STOP"):
+            queries.append(entry)
+            counter += 1
+        if entry == "STOP":
+            break
+    print(queries)
+
+from youtubesearchpython import *
+queries = ['2019 Nissan Altima', '2018 Nissan Altima', '2019 Nissan Sentra', '2018 Nissan Sentra', '2019 Toyota Camry', '2018 Toyota Camry']
+limit_actual = 10
+average_views = []
+for query in queries: 
+    return_list = []
+    search = Search(query, limit=limit_actual)
+    result = search.result(mode = ResultMode.dict)
+    x = result.get('result')
+    for number in range(limit_actual):
+        return_list.append(float(x[number].get('viewCount').get('text').replace(' views', '').replace(',','')))
+    z = 0
+    for element in return_list:
+        z += element
+    w = z/limit_actual
+    average_views.append(w)
+#This next step can likely be substituted for a CSV export command
+final_tally = []
+for i in range(len(queries)):
+    final_tally.append(queries[i])
+    final_tally.append(average_views[i])
+final_tally
+
+
+
+
+#To find duration:
+float(result.get('result')[0].get('duration').split(":")[0]) + float(result.get('result')[0].get('duration').split(":")[1])/60
+float(x[0].get('duration').split(":")[0]) + float(x[0].get('duration').split(":")[1])/60
+
+#AVERAGE VIEWS AND DURATION:
+from youtubesearchpython import *
+queries = ['2019 Nissan Altima', '2018 Nissan Altima', '2019 Nissan Sentra', '2018 Nissan Sentra', '2019 Toyota Camry', '2018 Toyota Camry', '2019 Ford F-150', '2021 Ford F-150']
+limit_actual = 10
+average_views = []
+average_duration = []
+for query in queries: 
+    return_list_1 = []
+    return_list_2 = []
+    search = Search(query, limit=limit_actual)
+    result = search.result(mode = ResultMode.dict)
+    x = result.get('result')
+    for number in range(limit_actual):
+        return_list_1.append(float(x[number].get('viewCount').get('text').replace(' views', '').replace(',','')))
+        return_list_2.append(float(x[number].get('duration').split(":")[0]) + float(x[number].get('duration').split(":")[1])/60)
+    z1 = 0
+    z2 = 0
+    for element1 in return_list_1:
+        z1 += element1
+    for element2 in return_list_2:
+        z2 += element2
+    w1 = z1/limit_actual
+    w2 = z2/limit_actual
+    average_views.append(w1)
+    average_duration.append(w2)
+final_tally = []
+for i in range(len(queries)):
+    final_tally.append(queries[i])
+    final_tally.append(round(average_views[i],0))
+    final_tally.append(round(average_duration[i],1))
+final_tally
+
+#QUERYING THE TOP 20:
+list1 = ['2017', '2018', '2019']
+list2 = ['NISSAN ALTIMA', 
+'HONDA CIVIC', 
+'NISSAN ROGUE', 
+'HONDA ACCORD', 
+'TOYOTA CAMRY', 
+'NISSAN SENTRA', 
+'FORD F150', 
+'HYUNDAI ELANTRA', 
+'TOYOTA COROLLA', 
+'CHEVROLET EQUINOX', 
+'JEEP GRAND CHEROKEE', 
+'FORD ESCAPE', 
+'HONDA CR-V', 
+'FORD EXPLORER', 
+'CHEVROLET SILVERADO 1500', 
+'HYUNDAI SONATA', 
+'CHEVROLET MALIBU', 
+'TOYOTA RAV4', 
+'FORD FOCUS']
+
+empty_list = []
+for element1 in list1:
+    for element2 in list2:
+        empty_list.append(element1 + " " + element2)
+
+from youtubesearchpython import *
+queries = ['2020 Honda Civic', '2020 Honda Accord']
+limit_actual = 10
+average_views = []
+average_duration = []
+for query in queries: 
+    return_list_1 = []
+    return_list_2 = []
+    search = VideosSearch(query, limit=limit_actual)
+    result = search.result(mode = ResultMode.dict)
+    x = result.get('result')
+    for number in range(limit_actual):
+        return_list_1.append(float(x[number].get('viewCount').get('text').replace(' views', '').replace(',','')))
+        return_list_2.append(float(x[number].get('duration').split(":")[0]) + float(x[number].get('duration').split(":")[1])/60)
+    z1 = 0
+    z2 = 0
+    for element1 in return_list_1:
+        z1 += element1
+    for element2 in return_list_2:
+        z2 += element2
+    w1 = z1/limit_actual
+    w2 = z2/limit_actual
+    average_views.append(w1)
+    average_duration.append(w2)
+query_tally = []
+view_tally = []
+duration_tally = []
+for i in range(len(queries)):
+    query_tally.append(queries[i])
+for i in range(len(queries)):
+    view_tally.append(round(average_views[i],0))
+for i in range(len(queries)):
+    duration_tally.append(round(average_duration[i],1))
+rsvp = pd.DataFrame(columns = ['Query', 'Views', 'Duration'])
+rsvp.Query = query_tally
+rsvp.Views = view_tally
+rsvp.Duration = duration_tally
+rsvp
+
+
+
+#OBTAINING RANK/POSITIONAL DATA:
+queries = ['best suv for towing', 'used cars', 'used ford mustang', 'dodge durango suv', 
+'telluride 2020', 'telluride', 'carmax kia telluride', 'kia telluride interior',
+'carmax rav4', 'carmax nissan rogue', 'dodge challenger vs charger', 'charger vs challenger', 'challenger vs charger',
+'civic vs accord', 'accord vs civic', 'honda civic vs honda accord']
+counter = 0
+queries_list = []
+rank_order = []
+for query in queries:
+    x = VideosSearch(query, limit=10).result().get('result')
+    for i in range(10):
+        if x[i].get('channel').get('name') == 'CarMax':
+            counter += 1
+            queries_list.append(query)
+            rank_order.append(i)
+print("Of {} queries, we had {} top-10 ranking(s):".format(len(queries), counter))
+for i in range(len(queries_list)):
+    print("{}: #{}".format(queries_list[i], rank_order[i]+1))
+
+#REMOVE DUPLICATES AND CORRESPONDING ENTRIES IN TWO LISTS:
+list1 = ['A','A','B']
+list2 = [1,2,6]
+empty_list = []
+counter_list = []
+counter = -1
+for i in list1:
+    counter += 1
+    if i not in empty_list:
+        empty_list.append(i)
+    else:
+        counter_list.append(counter)
+for i in counter_list:
+    list1.remove(list1[i])
+    list2.remove(list2[i])
+list1
+list2
+
+
+NEW IDEA:
+queries = ['best suv for towing', 'used cars', 'used ford mustang', 'dodge durango suv', 
+'telluride 2020', 'telluride', 'carmax kia telluride', 'kia telluride interior',
+'carmax rav4', 'carmax nissan rogue', 'dodge challenger vs charger', 'charger vs challenger', 'challenger vs charger',
+'civic vs accord', 'accord vs civic', 'honda civic vs honda accord']
+counter = 0
+queries_list = []
+rank_order = []
+for query in queries:
+    x = VideosSearch(query, limit=10).result().get('result')
+    for i in range(10):
+        if x[i].get('channel').get('name') == 'CarMax':
+            counter += 1
+            queries_list.append(query)
+            rank_order.append(i)
+empty_list = []
+counter_list = []
+counter1 = -1
+for i in queries_list:
+    counter1 += 1
+    if i not in empty_list:
+        empty_list.append(i)
+    else:
+        counter_list.append(counter)
+for i in counter_list:
+    queries_list.remove(queries_list[i])
+    rank_order.remove(rank_order[i])
+counter = counter - len(counter_list)
+print("Of {} queries, we had {} top-10 ranking(s):".format(len(queries), counter))
+for i in range(len(queries_list)):
+    print("{}: #{}".format(queries_list[i], rank_order[i]+1))
+
+#WHAT SEEMS TO WORK re:RANKING DATA:
+queries = ['best suv for towing', 'used cars', 'used ford mustang', 'dodge durango suv', 
+'telluride 2020', 'telluride', 'carmax kia telluride', 'kia telluride interior',
+'carmax rav4', 'carmax nissan rogue', 'dodge challenger vs charger', 'charger vs challenger', 'challenger vs charger',
+'civic vs accord', 'accord vs civic', 'honda civic vs honda accord']
+counter = 0
+queries_list = []
+rank_order = []
+titles_list = []
+for query in queries:
+    x = VideosSearch(query, limit=10).result().get('result')
+    empty = 0
+    for i in range(10):
+        if x[i].get('channel').get('name') == 'CarMax' and empty == 0:
+            counter += 1
+            empty += 1
+            queries_list.append(query)
+            rank_order.append('#{}'.format(i+1))
+            titles_list.append(x[i].get('title'))
+import pandas as pd
+table = pd.DataFrame(columns=['Query','Rank','Video'])
+table.Query = queries_list
+table.Rank = rank_order
+table.Video = titles_list
+table
+
+
+#HOW TO CALCULATE MEDIAN:
+def median(list1):
+    list1 = list(set(list1))
+    if len(list1) % 2 == 0:
+        return list1[len(list1)//2-1]/2 + list1[len(list1)//2]/2
+    if len(list1) % 2 != 0:
+        return list1[(len(list1)-1)//2]		
+
+HOW TO GET SUGGESTED TERMS:
+def related(queries):
+    output_list = []
+    for element1 in queries:
+        suggestion = suggestions.get(element1)
+        suggestion = suggestion.get('result')
+        for element2 in suggestion:
+            output_list.append(element2)
+    return output_list
+
+
+#SETTING UP A DATA FRAME:
+rsvp = pd.DataFrame(columns = ['Query', 'Views', 'Duration'])
+rsvp.Query = query_tally
+rsvp.Views = view_tally
+rsvp.Duration = duration_tally
+rsvp
+
+#PRESENT WAY OF DOING SVP:
+from youtubesearchpython import *
+import pandas as pd
+queries = []
+limit_actual = 10
+average_views = []
+average_duration = []
+for query in queries: 
+    return_list_1 = []
+    return_list_2 = []
+    search = VideosSearch(query, limit=limit_actual)
+    result = search.result(mode = ResultMode.dict)
+    x = result.get('result')
+    for number in range(limit_actual):
+        if x[number].get('viewCount').get('text').replace(' views', '').replace(' view', '').replace(',','') == 'No':
+            return_list_1.append(float(0))
+            return_list_2.append(float(0))
+        else:
+            return_list_1.append(float(x[number].get('viewCount').get('text').replace(' views', '').replace(' view', '').replace(',','')))
+            return_list_2.append(float(x[number].get('duration').split(":")[0]) + float(x[number].get('duration').split(":")[1])/60)
+    z1 = 0
+    z2 = 0
+    for element1 in return_list_1:
+        z1 += element1
+    for element2 in return_list_2:
+        z2 += element2
+    w1 = z1/limit_actual
+    w2 = z2/limit_actual
+    average_views.append(w1)
+    average_duration.append(w2)
+query_tally = []
+view_tally = []
+duration_tally = []
+for i in range(len(queries)):
+    query_tally.append(queries[i])
+for i in range(len(queries)):
+    view_tally.append(round(average_views[i],0))
+for i in range(len(queries)):
+    duration_tally.append(round(average_duration[i],1))
+rsvp = pd.DataFrame(columns = ['Query', 'Views', 'Duration'])
+rsvp.Query = query_tally
+rsvp.Views = view_tally
+rsvp.Duration = duration_tally
+rsvp
+
+
+
+#CHANNEL SUBSCRIBER COUNT:
+def remove(test_list):
+    result = 0
+    test_list = test_list.replace(' subscribers', '')
+    if 'K' in list(test_list):
+        result += float(test_list.replace('K',''))*1000
+    if 'M' in list(test_list):
+        result += float(test_list.replace('M', ''))*1000000
+    else:
+        result += float(test_list)
+    return result
+
+#GET SUBSCRIBER COUNT:
+channelSubscribers = ChannelsSearch('CarMax',limit=1,region='US').result().get('result')[0].get('subscribers')
+remove(channelSubscribers)
+
+#GETTING CHANNEL NAMES:
+video = VideosSearch('used cars',limit=2).result(mode=ResultMode.dict).get('result')
+empty_list_test = []
+for i in range(len(video)):
+    empty_list_test.append(video[i].get('channel').get('name'))
+for element in empty_list_test:
+    print(ChannelsSearch(element,limit=1,region='US').result().get('result')[0].get('subscribers'))
+
+#GETTING SUBSCRIBER COUNTS FOR CHANNELS CORREPSONDING TO TOP 10 VIDEOS:
+queries_list = ['Honda Civic', 'Honda Fit', 'Honda Accord']
+average_subscribers = []
+for item in queries_list:
+    channel_names = []
+    subscribers = []
+    for i in range(10):
+        channel_names.append(VideosSearch(item,limit=10).result(mode=ResultMode.dict).get('result').get('channel').get('name'))
+    for i in range(10):
+        subscribers.append(remove(ChannelsSearch(channel_names[i],limit=1,region='US').result().get('result')[0].get('subscribers'))
+    sum = 0
+    for number in subscribers:
+        sum += number 
+    average_subscribers.append(sum//10)
+    
+
+#IN PROGRESS FOR COMPUTING SUBSCRIBER COUNTS:
+def remove(test_list):
+    result = 0
+    test_list = test_list.replace(' subscribers', '')
+    if 'K' in list(test_list):
+        result += float(test_list.replace('K',''))*1000
+    elif 'M' in list(test_list):
+        result += float(test_list.replace('M', ''))*1000000
+    else:
+        result += float(test_list)
+    return result
+limit_actual = 5
+video_ = str(input("Video: "))
+video = VideosSearch(video_,limit = limit_actual).result(mode=ResultMode.dict).get('result')
+empty_list_test = []
+for i in range(len(video)):
+    empty_list_test.append(video[i].get('channel').get('name'))
+average = 0
+for element in empty_list_test:
+    average += float(remove(ChannelsSearch(element,limit=1,region='US').result().get('result')[0].get('subscribers')))
+average = average/limit_actual
+average
