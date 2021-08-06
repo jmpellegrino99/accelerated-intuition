@@ -1,26 +1,25 @@
 def euclid_dist(p1, p2):
-    assert type(p1) == type(p2) == tuple
-    sum = 0
-    for i in range(len(p1)):
-        sum += (p2[i] - p1[i])**2
-    return sum**(1/2)
+    if type(p1) == type(p2) == tuple:
+        sum = 0
+        for i in range(len(p1)):
+            sum += (p2[i] - p1[i])**2
+        return sum**(1/2)
+    else:
+        return abs(p2-p1)
 
 def most_common(lst):
     return max(set(lst), key=lst.count)
 
-def knn(dict1, point, k):
-
-    dict1 = {
+dict1 = {
         (1,1): 'red',
         (2,3): 'blue',
         (3,2.5): 'green',
         (4,4.25): 'blue'
     }
+point = (3,4)
+k = 2
 
-    point = (3,4)
-    
-    k = 2
-    
+def knn(dict1, point, k):
     distance_list = []
     for key in list(dict1.keys()):
         distance_list.append(euclid_dist(point,key))
