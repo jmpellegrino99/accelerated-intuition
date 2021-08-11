@@ -1,5 +1,5 @@
 #NEW SECTION
-#Search Volume Proxies (SVP):
+#Search Volume Proxies (SVP) WITH average subscriber count:
 #Import packages:
 from youtubesearchpython import *
 import pandas as pd
@@ -71,6 +71,59 @@ svp_df.Query = query_tally
 svp_df.Views = view_tally
 svp_df.Duration = duration_tally
 svp_df.Subscribers = average_subscribers
+#return the data frame
+svp_df
+
+
+
+
+#Search Volume Proxies (SVP) WITHOUT average subscriber count:
+#Import packages:
+from youtubesearchpython import *
+import pandas as pd
+#Begin entering queries and specifying parameters
+queries = ['honda accord', 'honda civic', 'honda del sol', 'carmax', 'kia telluride', 'kia telluride review']
+limit_actual = 10
+svp_df = pd.DataFrame(columns = ['Query', 'Views', 'Duration'])
+average_views = []
+average_duration = []
+for query in queries: 
+    return_list_1 = []
+    return_list_2 = []
+    x = VideosSearch(query, limit=limit_actual).result(mode = ResultMode.dict).get('result')
+    try:
+        for index in range(limit_actual):
+            if x[index].get('viewCount').get('text').replace(' views', '').replace(' view', '').replace(',','') == 'No':
+                return_list_1.append(float(0))
+                return_list_2.append(float(0))
+            else:
+                return_list_1.append(float(x[index].get('viewCount').get('text').replace(' views', '').replace(' view', '').replace(',','')))
+                return_list_2.append(float(x[index].get('duration').split(":")[0]) + float(x[index].get('duration').split(":")[1])/60)
+        z1 = 0
+        z2 = 0
+        for element1 in return_list_1:
+            z1 += element1
+        for element2 in return_list_2:
+            z2 += element2
+        w1 = z1/limit_actual
+        w2 = z2/limit_actual
+        average_views.append(w1)
+        average_duration.append(w2)
+    except:
+        average_views.append('NaN')
+        average_duration.append('NaN')
+query_tally = []
+view_tally = []
+duration_tally = []
+for i in range(len(queries)):
+    query_tally.append(queries[i])
+for i in range(len(queries)):
+    view_tally.append(int(average_views[i]))
+for i in range(len(queries)):
+    duration_tally.append(round(average_duration[i],1))
+svp_df.Query = query_tally
+svp_df.Views = view_tally
+svp_df.Duration = duration_tally
 #return the data frame
 svp_df
 
